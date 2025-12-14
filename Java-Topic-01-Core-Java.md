@@ -199,7 +199,7 @@ Master Core Java concepts that form the foundation of every Java application and
   - Same actor (reference type)
   - Different roles (actual object)
   - Different behavior based on role
-- [ ] **Abstraction (Hiding Implementation)**
+- [x] **Abstraction (Hiding Implementation)**
 
   **Abstract Class**
 
@@ -280,7 +280,7 @@ Master Core Java concepts that form the foundation of every Java application and
 
 ### Concepts to Master:
 
-- [ ] **List Interface**
+- [x] **List Interface**
 
   ```java
   // ArrayList - Dynamic array
@@ -311,7 +311,7 @@ Master Core Java concepts that form the foundation of every Java application and
   - ArrayList: Frequent reads, rare modifications
   - LinkedList: Frequent insertions/deletions
   - Vector: Thread-safe operations (rare use)
-- [ ] **Set Interface**
+- [x] **Set Interface**
 
   ```java
   // HashSet - No duplicates, no order
@@ -339,7 +339,7 @@ Master Core Java concepts that form the foundation of every Java application and
 
   - HashSet = Unique IDs (no order needed)
   - TreeSet = Sorted roll numbers
-- [ ] **Map Interface**
+- [x] **Map Interface**
 
   ```java
   // HashMap - Key-value pairs, no order
@@ -377,7 +377,7 @@ Master Core Java concepts that form the foundation of every Java application and
   | Performance | O(1)        | O(log n)    | O(1)           |
   | Null keys   | 1 allowed   | Not allowed | 1 allowed      |
   | Use case    | Fast lookup | Sorted data | Maintain order |
-- [ ] **Queue & Deque**
+- [x] **Queue & Deque**
 
   ```java
   // Queue - FIFO
@@ -410,7 +410,7 @@ Master Core Java concepts that form the foundation of every Java application and
 
 ### Concepts to Master:
 
-- [ ] **Try-Catch-Finally**
+- [x] **Try-Catch-Finally**
 
   ```java
   try {
@@ -437,7 +437,7 @@ Master Core Java concepts that form the foundation of every Java application and
   - Try = Drive normally
   - Catch = Handle accident
   - Finally = Always wear seatbelt
-- [ ] **Checked vs Unchecked Exceptions**
+- [x] **Checked vs Unchecked Exceptions**
 
   ```java
   // Checked Exception (must handle)
@@ -454,7 +454,7 @@ Master Core Java concepts that form the foundation of every Java application and
 
   **Checked:** IOException, SQLException
   **Unchecked:** NullPointerException, ArithmeticException
-- [ ] **Custom Exceptions**
+- [x] **Custom Exceptions**
 
   ```java
   class InsufficientFundsException extends Exception {
@@ -481,7 +481,7 @@ Master Core Java concepts that form the foundation of every Java application and
 
 ### Concepts to Master:
 
-- [ ] **String Immutability**
+- [x] **String Immutability**
 
   ```java
   String str1 = "Hello";
@@ -493,7 +493,7 @@ Master Core Java concepts that form the foundation of every Java application and
   ```
 
   **Real-life:** 🔒 **Security** - Passwords stored as strings can't be modified
-- [ ] **StringBuilder vs StringBuffer**
+- [x] **StringBuilder vs StringBuffer**
 
   ```java
   // StringBuilder (not thread-safe, faster)
@@ -506,7 +506,7 @@ Master Core Java concepts that form the foundation of every Java application and
   ```
 
   **Use case:** Building large strings in loops
-- [ ] **Common String Methods**
+- [x] **Common String Methods**
 
   ```java
   String str = "Hello World";
