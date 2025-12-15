@@ -9,8 +9,6 @@ import LibrarayManagementSystem.models.Member;
 /**
  * LibraryService - The ORCHESTRATOR
  * 
- * ⭐⭐⭐ THIS IS THE KEY CLASS TO UNDERSTAND! ⭐⭐⭐
- * 
  * WHY THIS CLASS EXISTS?
  * ----------------------
  * Think: Library তে book issue/return করতে কী লাগে?
@@ -39,9 +37,9 @@ import LibrarayManagementSystem.models.Member;
  */
 public class LibraryService {
 
-    private BookService bookService;      // Book operations এর জন্য
-    private MemberService memberService;  // Member operations এর জন্য
-    
+    private BookService bookService; // Book operations এর জন্য
+    private MemberService memberService; // Member operations এর জন্য
+
     /**
      * Constructor - Both services inject করা হয়
      * 
@@ -52,9 +50,9 @@ public class LibraryService {
         this.bookService = bookService;
         this.memberService = memberService;
     }
-    
+
     // ==================== MAIN LIBRARY OPERATIONS ====================
-    
+
     /**
      * Issue book to member - CORE FEATURE!
      * 
@@ -71,37 +69,41 @@ public class LibraryService {
      */
     public void issueBook(long bookId, long memberId) {
         try {
+
+            if (!canIssueBook(bookId, memberId)) {
+                return;
+            }
+
             // Step 1: Find book using BookService
             Book book = bookService.findBookById(bookId);
-            
+
             // Step 2: Find member using MemberService
             Member member = memberService.findMemberById(memberId);
-            
+
             // Step 3: Check if book is available
             if (!book.isBookAvailable() || book.getBookCopiesAvailable() <= 0) {
                 throw new BookNotAvailableException(
-                    "❌ Book '" + book.getBookTitle() + "' is not available!"
-                );
+                        "❌ Book '" + book.getBookTitle() + "' is not available!");
             }
-            
+
             // Step 4: Check if member already borrowed this book
             if (member.hasBorrowedBook(bookId)) {
                 System.out.println("❌ Member has already borrowed this book!");
                 return;
             }
-            
+
             // Step 5: Update book - decrease available copies
             book.decrementCopy();
-            
+
             // Step 6: Update member - add book to borrowed list
             member.addBorrowedBook(bookId);
-            
+
             // Success!
             System.out.println("\n✅ Book issued successfully!");
             System.out.println("   Member: " + member.getMemberName());
             System.out.println("   Book: " + book.getBookTitle());
             System.out.println("   Copies remaining: " + book.getBookCopiesAvailable());
-            
+
         } catch (BookNotFoundException e) {
             System.out.println("❌ Error: " + e.getMessage());
         } catch (MemberNotFoundException e) {
@@ -110,7 +112,7 @@ public class LibraryService {
             System.out.println("❌ " + e.getMessage());
         }
     }
-    
+
     /**
      * Return book from member - CORE FEATURE!
      * 
@@ -126,37 +128,37 @@ public class LibraryService {
         try {
             // Step 1: Find book
             Book book = bookService.findBookById(bookId);
-            
+
             // Step 2: Find member
             Member member = memberService.findMemberById(memberId);
-            
+
             // Step 3: Check if member actually borrowed this book
             if (!member.hasBorrowedBook(bookId)) {
                 System.out.println("❌ Member did not borrow this book!");
                 return;
             }
-            
+
             // Step 4: Update book - increase available copies
             book.incrementCopy();
-            
+
             // Step 5: Update member - remove book from borrowed list
             member.removeBorrowedBook(bookId);
-            
+
             // Success!
             System.out.println("\n✅ Book returned successfully!");
             System.out.println("   Member: " + member.getMemberName());
             System.out.println("   Book: " + book.getBookTitle());
             System.out.println("   Copies available now: " + book.getBookCopiesAvailable());
-            
+
         } catch (BookNotFoundException e) {
             System.out.println("❌ Error: " + e.getMessage());
         } catch (MemberNotFoundException e) {
             System.out.println("❌ Error: " + e.getMessage());
         }
     }
-    
+
     // ==================== DISPLAY OPERATIONS ====================
-    
+
     /**
      * Show member's borrowed books with full details
      * 
@@ -165,7 +167,7 @@ public class LibraryService {
     public void showMemberBorrowedBooks(long memberId) {
         memberService.displayMemberBorrowedBooks(memberId, bookService);
     }
-    
+
     /**
      * Display library statistics
      * 
@@ -178,7 +180,7 @@ public class LibraryService {
         System.out.println("   Total Members: " + memberService.getTotalMembersCount());
         System.out.println("=".repeat(50));
     }
-    
+
     /**
      * Check if a book can be issued
      * 
@@ -188,17 +190,17 @@ public class LibraryService {
         try {
             Book book = bookService.findBookById(bookId);
             Member member = memberService.findMemberById(memberId);
-            
+
             // All conditions for successful issue
-            return book.isBookAvailable() 
-                && book.getBookCopiesAvailable() > 0
-                && !member.hasBorrowedBook(bookId);
-                
+            return book.isBookAvailable()
+                    && book.getBookCopiesAvailable() > 0
+                    && !member.hasBorrowedBook(bookId);
+
         } catch (BookNotFoundException | MemberNotFoundException e) {
             return false;
         }
     }
-    
+
     /**
      * Get BookService reference
      * WHY? If other classes need book operations
@@ -206,7 +208,7 @@ public class LibraryService {
     public BookService getBookService() {
         return bookService;
     }
-    
+
     /**
      * Get MemberService reference
      * WHY? If other classes need member operations

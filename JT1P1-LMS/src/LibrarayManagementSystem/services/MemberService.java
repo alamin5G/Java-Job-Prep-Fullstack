@@ -2,221 +2,156 @@ package LibrarayManagementSystem.services;
 
 import LibrarayManagementSystem.exception.MemberNotFoundException;
 import LibrarayManagementSystem.models.Member;
-import LibrarayManagementSystem.models.Library;
 import LibrarayManagementSystem.models.Book;
+import LibrarayManagementSystem.repository.FileRepository;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
- * MemberService - Handles ALL Member-related Operations
+ * MemberService - Manages all member-related operations
  * 
- * RESPONSIBILITY:
- * - Member CRUD operations
- * - Member search operations
- * - Display member info
- * - Show member's borrowed books (coordination with BookService)
+ * SOLID Principle: Single Responsibility
+ * - This class ONLY handles Member operations
+ * - Does NOT handle books or library logic
  * 
- * WHY SEPARATE FROM BookService?
- * -------------------------------
- * Same reason: Separation of Concerns!
- * - BookService = Book কাজ
- * - MemberService = Member কাজ
- * - LibraryService = দুইটাকে coordinate করে
+ * NEW: File Persistence
+ * - Auto-saves after add/remove operations
+ * - Can load data from file on startup
  */
 public class MemberService {
 
-    private Library library;  // Library থেকে members access করবে
-    
-    public MemberService(Library library) {
-        this.library = library;
+    private HashMap<Long, Member> members;
+    private FileRepository fileRepository;
+
+    public MemberService() {
+        this.members = new HashMap<>();
+        this.fileRepository = new FileRepository();
     }
-    
-    // ==================== CREATE OPERATIONS ====================
-    
+
     /**
-     * Register new member
-     * 
-     * FLOW:
-     * 1. Validate member
-     * 2. Add to library's members list
+     * Constructor with FileRepository injection
+     */
+    public MemberService(FileRepository fileRepository) {
+        this.members = new HashMap<>();
+        this.fileRepository = fileRepository;
+    }
+
+    /**
+     * Load members from file
+     */
+    public void loadFromFile() {
+        this.members = fileRepository.loadMembers();
+    }
+
+    /**
+     * Save members to file
+     */
+    public void saveToFile() {
+        fileRepository.saveMembers(members);
+    }
+
+    /**
+     * Register a new member
      */
     public void registerMember(Member member) {
-        if (member == null) {
-            System.out.println("❌ Cannot register null member!");
-            return;
+        try {
+            members.put(member.getMemberId(), member);
+            System.out.println("✅ Member registered: " + member.getMemberName());
+            saveToFile(); // Auto-save
+        } catch (MemberNotFoundException e) {
+            System.err.println("❌ Error: " + e.getMessage());
         }
-        
-        library.getMembers().add(member);
-        System.out.println("✅ Member registered: " + member.getMemberName());
     }
-    
-    // ==================== READ OPERATIONS ====================
-    
+
     /**
      * Find member by ID
      * 
-     * LOGIC: Loop করে ID match করো, না পেলে exception throw
+     * @throws MemberNotFoundException if member doesn't exist
      */
     public Member findMemberById(long memberId) throws MemberNotFoundException {
-        for (Member member : library.getMembers()) {
-            try {
-                if (member.getMemberId() == memberId) {
-                    return member;
-                }
-            } catch (MemberNotFoundException e) {
-                continue;
-            }
+        Member member = members.get(memberId);
+        if (member == null) {
+            throw new MemberNotFoundException("Member with ID " + memberId + " not found");
         }
-        throw new MemberNotFoundException("Member not found with ID: " + memberId);
+        return member;
     }
-    
+
     /**
-     * Find member by name (partial match)
-     */
-    public List<Member> findMembersByName(String name) {
-        List<Member> foundMembers = new ArrayList<>();
-        
-        for (Member member : library.getMembers()) {
-            if (member.getMemberName() != null && 
-                member.getMemberName().toLowerCase().contains(name.toLowerCase())) {
-                foundMembers.add(member);
-            }
-        }
-        
-        return foundMembers;
-    }
-    
-    /**
-     * Get ALL members
+     * Get all members
      */
     public List<Member> getAllMembers() {
-        return library.getMembers();
+        return new ArrayList<>(members.values());
     }
-    
+
     /**
-     * Display member basic info
+     * Remove member
      */
-    public void displayMemberDetails(Member member) {
-        if (member == null) {
-            System.out.println("❌ No member to display!");
-            return;
-        }
-        
-        try {
-            System.out.println("\n👤 Member Details:");
-            System.out.println("   ID: " + member.getMemberId());
-            System.out.println("   Name: " + member.getMemberByName());
-            System.out.println("   Phone: " + member.getMemberPhone());
-            System.out.println("   Books Borrowed: " + member.getBorrowedBooksCount());
-        } catch (MemberNotFoundException e) {
-            System.out.println("❌ Error: " + e.getMessage());
-        }
+    public void removeMember(long memberId) throws MemberNotFoundException {
+        Member member = findMemberById(memberId);
+        members.remove(memberId);
+        System.out.println("✅ Member removed: " + member.getMemberName());
+        saveToFile(); // Auto-save
     }
-    
-    /**
-     * Display member এর borrowed books এর DETAILS
-     * 
-     * ⭐ KEY CONCEPT: এখানে BookService লাগবে!
-     * 
-     * WHY? 
-     * - Member এর কাছে শুধু book IDs আছে
-     * - Full book details পেতে হলে BookService এর help লাগবে
-     * 
-     * এইটাই হলো SERVICE COORDINATION!
-     */
-    public void displayMemberBorrowedBooks(long memberId, BookService bookService) {
-        try {
-            Member member = findMemberById(memberId);
-            List<Long> bookIds = member.getBorrowedBookIds();
-            
-            if (bookIds.isEmpty()) {
-                System.out.println("\n📚 " + member.getMemberByName() + " has not borrowed any books.");
-                return;
-            }
-            
-            System.out.println("\n📚 Books borrowed by " + member.getMemberByName() + ":");
-            System.out.println("=".repeat(80));
-            
-            // For each book ID, get full book details from BookService
-            for (Long bookId : bookIds) {
-                try {
-                    Book book = bookService.findBookById(bookId);
-                    bookService.displayBookDetails(book);
-                    System.out.println("-".repeat(80));
-                } catch (Exception e) {
-                    System.out.println("❌ Book with ID " + bookId + " not found!");
-                }
-            }
-            
-        } catch (MemberNotFoundException e) {
-            System.out.println("❌ " + e.getMessage());
-        }
-    }
-    
+
     /**
      * Display all members
      */
     public void displayAllMembers() {
-        List<Member> members = library.getMembers();
-        
         if (members.isEmpty()) {
-            System.out.println("\n👥 No members registered!");
+            System.out.println("No members registered.");
             return;
         }
-        
-        System.out.println("\n👥 === All Library Members (" + members.size() + " total) ===");
-        System.out.println("=".repeat(80));
-        
-        for (Member member : members) {
-            displayMemberDetails(member);
-            System.out.println("-".repeat(80));
+
+        System.out.println("\n📋 === All Members ===");
+        for (Member member : members.values()) {
+            System.out.println(member);
         }
+        System.out.println("=".repeat(50));
     }
-    
-    // ==================== UPDATE OPERATIONS ====================
-    
+
     /**
-     * Update member information
+     * Display member's borrowed books with full book details
+     * NOTE: Needs BookService to get book details
      */
-    public void updateMember(long memberId, Member updatedInfo) throws MemberNotFoundException {
-        Member existingMember = findMemberById(memberId);
-        
-        if (updatedInfo.getMemberName() != null) {
-            existingMember.setMemberName(updatedInfo.getMemberName());
+    public void displayMemberBorrowedBooks(long memberId, BookService bookService) {
+        try {
+            Member member = findMemberById(memberId);
+            List<Long> borrowedBookIds = member.getBorrowedBookIds();
+
+            System.out.println("\n📚 Books borrowed by: " + member.getMemberName());
+
+            if (borrowedBookIds.isEmpty()) {
+                System.out.println("   No books borrowed.");
+                return;
+            }
+
+            for (Long bookId : borrowedBookIds) {
+                try {
+                    Book book = bookService.findBookById(bookId);
+                    System.out.println("   - " + book.getBookTitle() + " by " + book.getBookAuthor());
+                } catch (Exception e) {
+                    System.out.println("   - Book ID " + bookId + " (details not found)");
+                }
+            }
+
+        } catch (MemberNotFoundException e) {
+            System.out.println("❌ " + e.getMessage());
         }
-        if (updatedInfo.getMemberPhone() != null) {
-            existingMember.setMemberPhone(updatedInfo.getMemberPhone());
-        }
-        
-        System.out.println("✅ Member updated successfully!");
     }
-    
-    // ==================== DELETE OPERATIONS ====================
-    
-    /**
-     * Remove member from library
-     * 
-     * WARNING: Check if member has borrowed books first!
-     */
-    public void removeMember(long memberId) throws MemberNotFoundException {
-        Member member = findMemberById(memberId);
-        
-        // Safety check
-        if (member.getBorrowedBooksCount() > 0) {
-            System.out.println("❌ Cannot remove member! " + member.getBorrowedBooksCount() + " books not returned yet.");
-            return;
-        }
-        
-        library.getMembers().remove(member);
-        System.out.println("✅ Member removed: " + member.getMemberName());
-    }
-    
-    // ==================== STATISTICS ====================
-    
+
     /**
      * Get total members count
      */
     public int getTotalMembersCount() {
-        return library.getMembers().size();
+        return members.size();
+    }
+
+    /**
+     * Get members HashMap (for direct access if needed)
+     */
+    public HashMap<Long, Member> getMembers() {
+        return members;
     }
 }

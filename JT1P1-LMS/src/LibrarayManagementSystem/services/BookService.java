@@ -1,65 +1,181 @@
 package LibrarayManagementSystem.services;
 
-import LibrarayManagementSystem.exception.BookNotAvailableException;
 import LibrarayManagementSystem.exception.BookNotFoundException;
 import LibrarayManagementSystem.models.Book;
-import LibrarayManagementSystem.models.Library;
+import LibrarayManagementSystem.repository.FileRepository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * BookService - Manages all book-related operations
+ * 
+ * SOLID Principle: Single Responsibility
+ * - This class ONLY handles Book operations
+ * - Does NOT handle members or borrowing logic
+ * 
+ * NEW: File Persistence
+ * - Auto-saves after add/remove operations
+ * - Can load data from file on startup
+ */
 public class BookService {
 
-    private Library library;
+    private HashMap<Long, Book> books; // Using HashMap for O(1) lookup by ID
+    private FileRepository fileRepository;
 
-    public BookService(Library library) {
-        this.library = library;
+    public BookService() {
+        this.books = new HashMap<>();
+        this.fileRepository = new FileRepository();
     }
 
-    public void addBookToLibrary(Book book) {
-        library.addBook(book);
+    /**
+     * Constructor with FileRepository injection
+     */
+    public BookService(FileRepository fileRepository) {
+        this.books = new HashMap<>();
+        this.fileRepository = fileRepository;
     }
 
-    public boolean isBookAvailable(int bookId) {
-        Book book = library.getBookById(bookId);
-        return book != null && book.isBookAvailable();
+    /**
+     * Load books from file
+     */
+    public void loadFromFile() {
+        this.books = fileRepository.loadBooks();
     }
 
-    public void borrowCopy(int bookId) throws BookNotAvailableException, BookNotFoundException {
-        Book book = library.getBookById(bookId);
+    /**
+     * Save books to file
+     */
+    public void saveToFile() {
+        fileRepository.saveBooks(books);
+    }
+
+    /**
+     * Add a book to the collection
+     */
+    public void addBook(Book book) {
+        try {
+            books.put(book.getBookId(), book);
+            System.out.println("✅ Book added: " + book.getBookTitle());
+            saveToFile(); // Auto-save
+        } catch (BookNotFoundException e) {
+            System.out.println("❌ Error adding book: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Find book by ID
+     * 
+     * @throws BookNotFoundException if book doesn't exist
+     */
+    public Book findBookById(long bookId) throws BookNotFoundException {
+        Book book = books.get(bookId);
         if (book == null) {
-            throw new BookNotFoundException("Book not found");
+            throw new BookNotFoundException("Book with ID " + bookId + " not found");
         }
-        if (!book.isBookAvailable()) {
-            throw new BookNotAvailableException("Book is not available");
-        }
-        book.setBookCopiesAvailable(book.getBookCopiesAvailable() - 1);
+        return book;
     }
 
-    public void returnCopy() {
-        if (book.getBookCopiesAvailable() < book.getBookCopiesTotal()) {
-            book.setBookCopiesAvailable(book.getBookCopiesAvailable() + 1);
+    /**
+     * Search books by title (partial match)
+     */
+    public List<Book> findBooksByTitle(String title) {
+        return books.values().stream()
+                .filter(book -> book.getBookTitle().toLowerCase().contains(title.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Search books by author (partial match)
+     */
+    public List<Book> findBooksByAuthor(String author) {
+        return books.values().stream()
+                .filter(book -> book.getBookAuthor().toLowerCase().contains(author.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Get all books
+     */
+    public List<Book> getAllBooks() {
+        return new ArrayList<>(books.values());
+    }
+
+    /**
+     * Get all available books
+     */
+    public List<Book> getAllAvailableBooks() {
+        return books.values().stream()
+                .filter(Book::isBookAvailable)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Remove a book
+     */
+    public void removeBook(long bookId) throws BookNotFoundException {
+        Book book = findBookById(bookId);
+        books.remove(bookId);
+        System.out.println("✅ Book removed: " + book.getBookTitle());
+        saveToFile(); // Auto-save
+    }
+
+    /**
+     * Display all books
+     */
+    public void displayAllBooks() {
+        if (books.isEmpty()) {
+            System.out.println("No books in library.");
+            return;
         }
-        book.setBookAvailable(true);
+
+        System.out.println("\n📚 === All Books ===");
+        for (Book book : books.values()) {
+            System.out.println(book);
+        }
+        System.out.println("=".repeat(50));
     }
 
-    public void getBookDetails() {
-        System.out.print("Book ID: " + book.getBookId());
-        System.out.print("\tBook Title: " + book.getBookTitle());
-        System.out.print("\tBook Author: " + book.getBookAuthor());
-        System.out.print("\tBook Publisher: " + book.getBookPublisher());
-        System.out.print("\tBook ISBN: " + book.getBookISBN());
-        System.out.print("\tBook Total Copies: " + book.getBookCopiesTotal());
-        System.out.print("\tBook Available copies: " + book.getBookCopiesAvailable());
-        System.out.println("\tBook Available: " + book.isBookAvailable() + "\n");
-    }
+    /**
+     * Display available books only
+     */
+    public void displayAvailableBooks() {
+        List<Book> availableBooks = getAllAvailableBooks();
 
-    public void getBookDetailsById(int bookId) {
-        // This method would typically look up a book by its ID from a data source.
-        // For demonstration purposes, we'll just print the details of the current book.
-        if (book.getBookId() == bookId) {
-            getBookDetails();
-        } else {
-            System.out.println("Book with ID " + bookId + " not found.");
+        if (availableBooks.isEmpty()) {
+            System.out.println("No books available.");
+            return;
         }
 
+        System.out.println("\n📗 === Available Books ===");
+        for (Book book : availableBooks) {
+            System.out.println(book);
+        }
+        System.out.println("=".repeat(50));
     }
 
+    /**
+     * Get total books count
+     */
+    public int getTotalBooksCount() {
+        return books.size();
+    }
+
+    /**
+     * Get available books count
+     */
+    public int getAvailableBooksCount() {
+        return (int) books.values().stream()
+                .filter(Book::isBookAvailable)
+                .count();
+    }
+
+    /**
+     * Get books HashMap (for direct access if needed)
+     */
+    public HashMap<Long, Book> getBooks() {
+        return books;
+    }
 }
