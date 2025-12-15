@@ -1,8 +1,11 @@
 package LibrarayManagementSystem.models;
 
 import LibrarayManagementSystem.exception.BookNotFoundException;
+import java.io.Serializable;
 
-public class Book {
+public class Book implements Serializable {
+    
+    private static final long serialVersionUID = 1L;  // For version control
 
     private static long bookIdCounter = 0L;
     private long bookId;
@@ -14,12 +17,13 @@ public class Book {
     private int bookCopiesAvailable;
     private boolean bookAvailable;
 
-    //default constructor
+    // default constructor
     public Book() {
     }
 
-    //constructor of book class
-    public Book(String bookTitle, String bookAuthor, String bookPublisher, String bookISBN, int bookCopies, boolean bookAvailable) {
+    // constructor of book class
+    public Book(String bookTitle, String bookAuthor, String bookPublisher, String bookISBN, int bookCopies,
+            boolean bookAvailable) {
         this.bookId = ++bookIdCounter;
         this.bookTitle = bookTitle;
         this.bookAuthor = bookAuthor;
@@ -28,6 +32,10 @@ public class Book {
         bookCopiesAvailable = bookCopies;
         bookCopiesTotal = bookCopies;
         this.bookAvailable = bookAvailable;
+    }
+
+    public boolean isBookAvailable() {
+        return bookAvailable;
     }
 
     public long getBookId() throws BookNotFoundException {
@@ -79,6 +87,51 @@ public class Book {
 
     public int getBookCopiesAvailable() {
         return bookCopiesAvailable;
+    }
+
+    public void setBookCopiesAvailable(int bookCopiesAvailable) {
+        this.bookCopiesAvailable = bookCopiesAvailable;
+        // Auto-update availability based on copies
+        this.bookAvailable = (bookCopiesAvailable > 0);
+    }
+
+    public void setBookAvailable(boolean bookAvailable) {
+        this.bookAvailable = bookAvailable;
+    }
+
+    /**
+     * Decrement available copy when book is borrowed
+     * Business logic: Book manages its own state
+     */
+    public void decrementCopy() {
+        if (bookCopiesAvailable > 0) {
+            bookCopiesAvailable--;
+            // Update availability status
+            bookAvailable = (bookCopiesAvailable > 0);
+        }
+    }
+
+    /**
+     * Increment available copy when book is returned
+     * Business logic: Book manages its own state
+     */
+    public void incrementCopy() {
+        if (bookCopiesAvailable < bookCopiesTotal) {
+            bookCopiesAvailable++;
+            // Update availability status
+            bookAvailable = true;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "bookId=" + bookId +
+                ", title='" + bookTitle + '\'' +
+                ", author='" + bookAuthor + '\'' +
+                ", ISBN='" + bookISBN + '\'' +
+                ", available=" + bookCopiesAvailable + "/" + bookCopiesTotal +
+                '}';
     }
 
 }

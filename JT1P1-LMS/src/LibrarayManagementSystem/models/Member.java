@@ -1,17 +1,20 @@
 package LibrarayManagementSystem.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import LibrarayManagementSystem.exception.MemberNotFoundException;
 
-public class Member {
+public class Member implements Serializable {
+
+    private static final long serialVersionUID = 1L; // For version control
 
     private static long memberIdCounter = 0L;
     private long memberId;
     private String memberName;
     private String memberPhone;
-    private List<Long> borrowedBookIds;  // Changed to Long to match Book ID type
+    private List<Long> borrowedBookIds;
 
     // Default constructor
     public Member() {
@@ -21,10 +24,10 @@ public class Member {
         this.memberId = ++memberIdCounter;
         this.memberName = memberName;
         this.memberPhone = memberPhone;
-        this.borrowedBookIds = new ArrayList<>();  // ✅ Properly initialized
+        this.borrowedBookIds = new ArrayList<>();
     }
 
-    //getter setter
+    // getter setter
     public Long getMemberId() throws MemberNotFoundException {
         if (memberId <= 0) {
             throw new MemberNotFoundException("Member ID is not set or invalid.");
@@ -48,14 +51,13 @@ public class Member {
         this.memberPhone = memberPhone;
     }
 
-    // Borrowed books management
+    // Borrowed books id list
     public List<Long> getBorrowedBookIds() {
         return borrowedBookIds;
     }
 
     /**
-     * Add a book ID to member's borrowed list WHY HERE? Because this is
-     * member's OWN data, member manages it
+     * Add a book ID to member's borrowed list
      */
     public void addBorrowedBook(long bookId) {
         if (!borrowedBookIds.contains(bookId)) {
