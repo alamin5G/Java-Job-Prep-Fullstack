@@ -1,63 +1,38 @@
 package LibrarayManagementSystem.models;
 
-import LibrarayManagementSystem.exception.MemberNotFoundException;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+
+import LibrarayManagementSystem.exception.MemberNotFoundException;
 
 public class Member {
 
-    private Long memberId = 0L;
+    private static long memberIdCounter = 0L;
+    private long memberId;
     private String memberName;
     private String memberPhone;
-    private List<Integer> borrowedBooks;
+    private List<Long> borrowedBookIds;  // Changed to Long to match Book ID type
 
+    // Default constructor
+    public Member() {
+    }
 
     public Member(String memberName, String memberPhone) {
-
+        this.memberId = ++memberIdCounter;
         this.memberName = memberName;
         this.memberPhone = memberPhone;
-        ++memberId;
-        new ArrayList<Integer>();
-
-    }
-
-
-
-    public void getMemberDetails() {
-        try{
-            System.out.print("Member ID: " + getMemberId());
-            System.out.print("\tMember Name: " + getMemberByName());
-
-            System.out.print("\tMember Phone: " + getMemberPhone());
-            System.out.println("\tBooks Borrowed: " + getBooksBorrowed()+"\n");
-        }catch (MemberNotFoundException e){
-            System.err.println(e.getMessage() + " in Member class at getMemberDetails() method.");
-        }
-    }
-
-    public void getBorrowedBookDetails(List<Integer> borrowedBooks) {
-        for(Integer borrowedBook : borrowedBooks){
-            System.out.println( "Book Id: " +borrowedBook);
-
-        }
+        this.borrowedBookIds = new ArrayList<>();  // ✅ Properly initialized
     }
 
     //getter setter
-
     public Long getMemberId() throws MemberNotFoundException {
-        if (memberId == null || memberId <= 0) {
+        if (memberId <= 0) {
             throw new MemberNotFoundException("Member ID is not set or invalid.");
         }
         return memberId;
     }
 
-
-    public String getMemberByName() throws MemberNotFoundException {
-        if (memberName == null || memberName.isEmpty()) {
-            throw new MemberNotFoundException("Member name is not set.");
-        }
+    public String getMemberName() {
         return memberName;
     }
 
@@ -73,12 +48,49 @@ public class Member {
         this.memberPhone = memberPhone;
     }
 
-    public int getBooksBorrowed() {
-        return booksBorrowed;
+    // Borrowed books management
+    public List<Long> getBorrowedBookIds() {
+        return borrowedBookIds;
     }
 
-    public void setBooksBorrowed(int booksBorrowed) {
-        this.booksBorrowed = booksBorrowed;
+    /**
+     * Add a book ID to member's borrowed list WHY HERE? Because this is
+     * member's OWN data, member manages it
+     */
+    public void addBorrowedBook(long bookId) {
+        if (!borrowedBookIds.contains(bookId)) {
+            borrowedBookIds.add(bookId);
+        }
     }
 
+    /**
+     * Remove a book ID from member's borrowed list
+     */
+    public void removeBorrowedBook(long bookId) {
+        borrowedBookIds.remove(bookId);
+    }
+
+    /**
+     * Check if member has borrowed a specific book
+     */
+    public boolean hasBorrowedBook(long bookId) {
+        return borrowedBookIds.contains(bookId);
+    }
+
+    /**
+     * Get count of books borrowed
+     */
+    public int getBorrowedBooksCount() {
+        return borrowedBookIds.size();
+    }
+
+    @Override
+    public String toString() {
+        return "Member{"
+                + "memberId=" + memberId
+                + ", memberName='" + memberName + '\''
+                + ", memberPhone='" + memberPhone + '\''
+                + ", borrowedBooksCount=" + borrowedBookIds.size()
+                + '}';
+    }
 }

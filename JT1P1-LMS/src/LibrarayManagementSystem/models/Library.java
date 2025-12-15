@@ -8,11 +8,10 @@ import java.util.List;
 import java.util.UUID;
 
 public class Library {
+
     List<Book> books;
     HashMap<Long, Member> members;
     private UUID transactionId;
-
-
 
     public void addBook(Book book) {
         books.add(book);
@@ -36,14 +35,13 @@ public class Library {
         return null;
     }
 
-
     public void registerMember(Member member) {
-       try{
-           members.put(member.getMemberId(), member);
+        try {
+            members.put(member.getMemberId(), member);
 
-           } catch (MemberNotFoundException e) {
-              System.err.println(e.getMessage());
-       }
+        } catch (MemberNotFoundException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     public Member getMemberById(long memberId) {
@@ -53,7 +51,5 @@ public class Library {
     public void issueBook(long bookId, long memberId) {
 
     }
-
-
 
 }

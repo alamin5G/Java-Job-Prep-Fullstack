@@ -1,11 +1,11 @@
 package LibrarayManagementSystem.models;
 
-
-import LibrarayManagementSystem.exception.BookNotAvailableException;
 import LibrarayManagementSystem.exception.BookNotFoundException;
 
 public class Book {
-    private long bookId = 0L;
+
+    private static long bookIdCounter = 0L;
+    private long bookId;
     private String bookTitle;
     private String bookAuthor;
     private String bookPublisher;
@@ -15,11 +15,12 @@ public class Book {
     private boolean bookAvailable;
 
     //default constructor
-    public Book (){}
+    public Book() {
+    }
 
     //constructor of book class
-    public Book( String bookTitle, String bookAuthor, String bookPublisher, String bookISBN, int bookCopies, boolean bookAvailable) {
-        ++bookId;
+    public Book(String bookTitle, String bookAuthor, String bookPublisher, String bookISBN, int bookCopies, boolean bookAvailable) {
+        this.bookId = ++bookIdCounter;
         this.bookTitle = bookTitle;
         this.bookAuthor = bookAuthor;
         this.bookPublisher = bookPublisher;
@@ -29,29 +30,10 @@ public class Book {
         this.bookAvailable = bookAvailable;
     }
 
-
-    //public method of book class
-    public boolean isBookAvailable() {
-        return bookAvailable && bookCopiesAvailable > 0;
-    }
-
-    public void borrowCopy() throws BookNotAvailableException, BookNotFoundException {
-        if (!bookAvailable) {
-            throw new BookNotAvailableException("Book is not available");
+    public long getBookId() throws BookNotFoundException {
+        if (bookId <= 0) {
+            throw new BookNotFoundException("Book ID is not set or invalid.");
         }
-        bookCopiesAvailable--;
-    }
-
-    public void returnCopy(){
-        if (bookCopiesAvailable < bookCopiesTotal) bookCopiesAvailable++;
-        bookAvailable = true;
-    }
-
-
-
-
-
-    public long getBookId() {
         return bookId;
     }
 
@@ -86,8 +68,6 @@ public class Book {
     public void setBookISBN(String bookISBN) {
         this.bookISBN = bookISBN;
     }
-
-
 
     public int getBookCopiesTotal() {
         return bookCopiesTotal;
