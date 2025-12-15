@@ -1,0 +1,12 @@
+# Ignore all files in the .idea directory
+.idea/
+
+# Ignore all files in the .vscode directory
+.vscode
+
+# Ignore all files in the .gradle directory
+.gradle
+
+# Ignore all files in the .IntelliJIdea directory
+.IntelliJIdea
+
