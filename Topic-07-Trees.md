@@ -5,6 +5,134 @@ Trees হলো hierarchical data structure যা real-world এ সবচে�
 
 ---
 
+## 🎯 6 Tree Patterns - Quick Reference
+
+> **Master these 6 patterns → Solve 150+ tree problems!**
+
+### Pattern Recognition Checklist
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  PROBLEM KEYWORDS → PATTERN                                  │
+├─────────────────────────────────────────────────────────────┤
+│  ✅ "path" + "depth" + "recursive" → TREE DFS               │
+│  ✅ "level order" + "level by level" → TREE BFS             │
+│  ✅ "search" + "sorted tree" → BST                           │
+│  ✅ "prefix" + "autocomplete" → TRIE                         │
+│  ✅ "top K" + "kth largest" → HEAP                           │
+│  ✅ "median" + "stream" → TWO HEAPS                          │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Visual Pattern Map
+
+```
+TREE PATTERNS (6)
+│
+├─ 🔵 PATTERN 11: Tree DFS (Depth First Search)
+│   └─ 🧠 Memory Trick: "Go deep before going wide - like exploring a cave"
+│   └─ ⏰ Time: O(n) | Space: O(h) - h = height
+│   └─ 🎯 Use: Path problems, depth, tree validation
+│   └─ 📝 Template:
+│       def dfs(node):
+│           if not node: return
+│           # Process node
+│           dfs(node.left)
+│           dfs(node.right)
+│
+├─ 🟢 PATTERN 12: Tree BFS (Breadth First Search)
+│   └─ 🧠 Memory Trick: "Level by level - like reading a book"
+│   └─ ⏰ Time: O(n) | Space: O(w) - w = max width
+│   └─ 🎯 Use: Level order, minimum depth, right side view
+│   └─ 📝 Template:
+│       queue = [root]
+│       while queue:
+│           level_size = len(queue)
+│           for i in range(level_size):
+│               node = queue.pop(0)
+│               if node.left: queue.append(node.left)
+│               if node.right: queue.append(node.right)
+│
+├─ 🟡 PATTERN 13: BST (Binary Search Tree)
+│   └─ 🧠 Memory Trick: "Left < Root < Right - always sorted"
+│   └─ ⏰ Time: O(log n) average | Space: O(h)
+│   └─ 🎯 Use: Search, insert, delete in sorted tree
+│   └─ 📝 Template:
+│       def search(root, val):
+│           if not root or root.val == val: return root
+│           if val < root.val: return search(root.left, val)
+│           else: return search(root.right, val)
+│
+├─ 🟣 PATTERN 14: Trie (Prefix Tree)
+│   └─ 🧠 Memory Trick: "Tree of letters - like a dictionary"
+│   └─ ⏰ Time: O(m) - m = word length | Space: O(alphabet * n)
+│   └─ 🎯 Use: Autocomplete, spell check, prefix matching
+│   └─ 📝 Template:
+│       class TrieNode:
+│           children = {}
+│           is_end = False
+│
+├─ 🔴 PATTERN 15: Heap / Priority Queue (Top K)
+│   └─ 🧠 Memory Trick: "Parent always bigger/smaller than children"
+│   └─ ⏰ Time: O(n log k) | Space: O(k)
+│   └─ 🎯 Use: Top K elements, Kth largest/smallest
+│   └─ 📝 Template:
+│       import heapq
+│       heap = []
+│       for num in nums:
+│           heapq.heappush(heap, num)
+│           if len(heap) > k:
+│               heapq.heappop(heap)
+│
+└─ 🟠 PATTERN 28: Two Heaps (Median Finding)
+    └─ 🧠 Memory Trick: "Max heap (left) + Min heap (right) = Balanced"
+    └─ ⏰ Time: O(log n) insert | Space: O(n)
+    └─ 🎯 Use: Find median, sliding window median
+    └─ 📝 Template:
+        max_heap = []  # Left half (smaller numbers)
+        min_heap = []  # Right half (larger numbers)
+        # Keep balanced: |max_heap| - |min_heap| <= 1
+```
+
+### Quick Decision Tree
+
+```
+START: Tree Problem
+    │
+    ├─ Need LEVEL-WISE traversal?
+    │   └─ YES → ✅ TREE BFS (Pattern 12)
+    │
+    ├─ Need PATH or DEPTH calculation?
+    │   └─ YES → ✅ TREE DFS (Pattern 11)
+    │
+    ├─ Tree is SORTED (BST)?
+    │   └─ YES → ✅ BST (Pattern 13)
+    │
+    ├─ Need PREFIX matching?
+    │   └─ YES → ✅ TRIE (Pattern 14)
+    │
+    ├─ Need TOP K elements?
+    │   └─ YES → ✅ HEAP (Pattern 15)
+    │
+    └─ Need MEDIAN in stream?
+        └─ YES → ✅ TWO HEAPS (Pattern 28)
+```
+
+### Memorization Mnemonics
+
+**Remember: "DBSTHM" (DFS, BFS, BST, Trie, Heap, Median)**
+
+```
+D - DFS           → "Deep dive first"
+B - BFS           → "Breadth before depth"
+S - BST           → "Sorted tree"
+T - Trie          → "Tree of letters"
+H - Heap          → "Heap of priorities"
+M - Two Heaps     → "Median with two heaps"
+```
+
+---
+
 ## 🔷 Part 1: Tree Fundamentals
 
 ### Concepts to Master:

@@ -5,6 +5,103 @@ Dynamic Programming (DP) হলো optimization technique - overlapping subprobl
 
 ---
 
+## 🎯 4 DP Patterns - Quick Reference
+
+> **Master these 4 patterns → Solve 200+ DP problems!**
+
+### Pattern Recognition Checklist
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  PROBLEM KEYWORDS → PATTERN                                  │
+├─────────────────────────────────────────────────────────────┤
+│  ✅ "subset" + "target" + "0/1 choice" → 0/1 KNAPSACK       │
+│  ✅ "unlimited" + "ways" + "coins" → UNBOUNDED KNAPSACK     │
+│  ✅ "common" + "subsequence" + "two strings" → LCS          │
+│  ✅ "increasing" + "subsequence" → LIS                       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Visual Pattern Map
+
+```
+DP PATTERNS (4)
+│
+├─ 🔵 PATTERN 20: 0/1 Knapsack
+│   └─ 🧠 Memory Trick: "Each item: take it or leave it (0 or 1)"
+│   └─ ⏰ Time: O(n * W) | Space: O(n * W) or O(W)
+│   └─ 🎯 Use: Subset selection, partition, target sum
+│   └─ 📝 Template:
+│       dp[i][w] = max value with first i items, capacity w
+│       dp[i][w] = max(
+│           dp[i-1][w],                    # Don't take
+│           dp[i-1][w-weight[i]] + value[i]  # Take
+│       )
+│
+├─ 🟢 PATTERN 21: Unbounded Knapsack
+│   └─ 🧠 Memory Trick: "Unlimited items - can use same item multiple times"
+│   └─ ⏰ Time: O(n * W) | Space: O(W)
+│   └─ 🎯 Use: Coin change, rod cutting, unlimited supply
+│   └─ 📝 Template:
+│       dp[w] = max value with capacity w
+│       for item in items:
+│           for w in range(weight[item], W+1):
+│               dp[w] = max(dp[w], dp[w-weight[item]] + value[item])
+│
+├─ 🟡 PATTERN 22: LCS (Longest Common Subsequence)
+│   └─ 🧠 Memory Trick: "Match characters from both strings"
+│   └─ ⏰ Time: O(m * n) | Space: O(m * n)
+│   └─ 🎯 Use: String matching, diff tools, DNA alignment
+│   └─ 📝 Template:
+│       dp[i][j] = LCS of s1[0..i] and s2[0..j]
+│       if s1[i] == s2[j]:
+│           dp[i][j] = dp[i-1][j-1] + 1
+│       else:
+│           dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+│
+└─ 🟣 PATTERN 23: LIS (Longest Increasing Subsequence)
+    └─ 🧠 Memory Trick: "Build increasing sequence - remember best so far"
+    └─ ⏰ Time: O(n²) or O(n log n) | Space: O(n)
+    └─ 🎯 Use: Increasing patterns, stock prices, scheduling
+    └─ 📝 Template:
+        dp[i] = length of LIS ending at index i
+        for i in range(n):
+            for j in range(i):
+                if arr[j] < arr[i]:
+                    dp[i] = max(dp[i], dp[j] + 1)
+```
+
+### Quick Decision Tree
+
+```
+START: DP Problem
+    │
+    ├─ Can use each item ONCE only?
+    │   └─ YES → ✅ 0/1 KNAPSACK (Pattern 20)
+    │
+    ├─ Can use items UNLIMITED times?
+    │   └─ YES → ✅ UNBOUNDED KNAPSACK (Pattern 21)
+    │
+    ├─ Comparing TWO STRINGS for common parts?
+    │   └─ YES → ✅ LCS (Pattern 22)
+    │
+    └─ Finding INCREASING pattern in array?
+        └─ YES → ✅ LIS (Pattern 23)
+```
+
+### Memorization Mnemonics
+
+**Remember: "KULL" (Knapsack-0/1, Unbounded, LCS, LIS)**
+
+```
+K - 0/1 Knapsack       → "Keep or skip each item"
+U - Unbounded Knapsack → "Unlimited use"
+L - LCS                → "Longest common"
+L - LIS                → "Longest increasing"
+```
+
+---
+
 ## 🔷 Part 1: DP Fundamentals
 
 ### Concepts to Master:

@@ -5,6 +5,121 @@ Graphs হলো সবচেয়ে versatile data structure - real-world rel
 
 ---
 
+## 🎯 4 Graph Patterns - Quick Reference
+
+> **Master these 4 patterns → Solve 100+ graph problems!**
+
+### Pattern Recognition Checklist
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  PROBLEM KEYWORDS → PATTERN                                  │
+├─────────────────────────────────────────────────────────────┤
+│  ✅ "connected components" + "path exists" → GRAPH DFS      │
+│  ✅ "shortest path" + "unweighted" → GRAPH BFS              │
+│  ✅ "connected" + "cycle" + "merge" → UNION FIND            │
+│  ✅ "task order" + "prerequisites" → TOPOLOGICAL SORT       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Visual Pattern Map
+
+```
+GRAPH PATTERNS (4)
+│
+├─ 🔵 PATTERN 16: Graph DFS
+│   └─ 🧠 Memory Trick: "Explore one path completely before backtracking"
+│   └─ ⏰ Time: O(V + E) | Space: O(V)
+│   └─ 🎯 Use: Connected components, cycle detection, path finding
+│   └─ 📝 Template:
+│       visited = set()
+│       def dfs(node):
+│           visited.add(node)
+│           for neighbor in graph[node]:
+│               if neighbor not in visited:
+│                   dfs(neighbor)
+│
+├─ 🟢 PATTERN 17: Graph BFS
+│   └─ 🧠 Memory Trick: "Explore all neighbors before going deeper"
+│   └─ ⏰ Time: O(V + E) | Space: O(V)
+│   └─ 🎯 Use: Shortest path (unweighted), level-wise exploration
+│   └─ 📝 Template:
+│       queue = [start]
+│       visited = {start}
+│       while queue:
+│           node = queue.pop(0)
+│           for neighbor in graph[node]:
+│               if neighbor not in visited:
+│                   visited.add(neighbor)
+│                   queue.append(neighbor)
+│
+├─ 🟡 PATTERN 18: Union Find (Disjoint Set)
+│   └─ 🧠 Memory Trick: "Group elements - find parent, union groups"
+│   └─ ⏰ Time: O(α(n)) ≈ O(1) | Space: O(n)
+│   └─ 🎯 Use: Connected components, cycle detection, network connectivity
+│   └─ 📝 Template:
+│       parent = list(range(n))
+│       def find(x):
+│           if parent[x] != x:
+│               parent[x] = find(parent[x])  # Path compression
+│           return parent[x]
+│       def union(x, y):
+│           px, py = find(x), find(y)
+│           if px != py:
+│               parent[px] = py
+│               return True
+│           return False
+│
+└─ 🟣 PATTERN 19: Topological Sort
+    └─ 🧠 Memory Trick: "Order tasks by dependencies - no cycles allowed"
+    └─ ⏰ Time: O(V + E) | Space: O(V)
+    └─ 🎯 Use: Task scheduling, course prerequisites, build order
+    └─ 📝 Template (Kahn's Algorithm):
+        in_degree = [0] * n
+        for u, v in edges:
+            in_degree[v] += 1
+        queue = [i for i in range(n) if in_degree[i] == 0]
+        result = []
+        while queue:
+            node = queue.pop(0)
+            result.append(node)
+            for neighbor in graph[node]:
+                in_degree[neighbor] -= 1
+                if in_degree[neighbor] == 0:
+                    queue.append(neighbor)
+```
+
+### Quick Decision Tree
+
+```
+START: Graph Problem
+    │
+    ├─ Need SHORTEST PATH (unweighted)?
+    │   └─ YES → ✅ GRAPH BFS (Pattern 17)
+    │
+    ├─ Need to find CONNECTED COMPONENTS or CYCLES?
+    │   └─ YES → ✅ GRAPH DFS (Pattern 16)
+    │
+    ├─ Need to check if nodes are CONNECTED or MERGE groups?
+    │   └─ YES → ✅ UNION FIND (Pattern 18)
+    │
+    └─ Need TASK ORDERING with dependencies?
+        └─ YES → ✅ TOPOLOGICAL SORT (Pattern 19)
+```
+
+### Memorization Mnemonics
+
+**Remember: "DBUT" (DFS, BFS, Union, Topo)**
+
+```
+D - DFS              → "Deep exploration"
+B - BFS              → "Breadth first"
+U - Union Find       → "Union groups"
+T - Topological Sort → "Task order"
+```
+
+---
+
 ## 🔷 Part 1: Graph Fundamentals
 
 ### Concepts to Master:
