@@ -5,6 +5,33 @@ Stacks এবং Queues হলো fundamental data structures যা real-world 
 
 ---
 
+## 🎯 1 Stack Pattern - Quick Reference
+
+> **Master this pattern → Solve 50+ stack problems!**
+
+### Pattern Recognition Checklist
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  PROBLEM KEYWORDS → PATTERN                                  │
+├─────────────────────────────────────────────────────────────┤
+│  ✅ "next greater" + "next smaller" → MONOTONIC STACK       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Visual Pattern Map
+
+```
+STACK PATTERN (1)
+│
+└─ ⚪ PATTERN 8: Monotonic Stack
+    └─ 🧠 Memory Trick: "Stack stays increasing/decreasing - like stairs"
+    └─ ⏰ Time: O(n) | Space: O(n)
+    └─ 🎯 Use: Next greater/smaller element, histogram problems
+```
+
+---
+
 ## 🔷 Part 1: Stack Fundamentals
 
 ### Concepts to Master:

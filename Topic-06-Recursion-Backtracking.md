@@ -5,6 +5,39 @@ Recursion হলো problem-solving এর powerful technique। Backtracking �
 
 ---
 
+## 🎯 2 Recursion Patterns - Quick Reference
+
+> **Master these 2 patterns → Solve 100+ recursion problems!**
+
+### Pattern Recognition Checklist
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  PROBLEM KEYWORDS → PATTERN                                  │
+├─────────────────────────────────────────────────────────────┤
+│  ✅ "all combinations" + "permutations" → BACKTRACKING      │
+│  ✅ "split problem" + "merge results" → DIVIDE & CONQUER    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Visual Pattern Map
+
+```
+RECURSION PATTERNS (2)
+│
+├─ 🔵 PATTERN 24: Backtracking
+│   └─ 🧠 Memory Trick: "Try all paths, backtrack if dead end"
+│   └─ ⏰ Time: O(2^n) or O(n!) | Space: O(n)
+│   └─ 🎯 Use: Combinations, permutations, subsets, N-Queens
+│
+└─ 🟢 PATTERN 25: Divide & Conquer
+    └─ 🧠 Memory Trick: "Break problem, solve parts, combine results"
+    └─ ⏰ Time: O(n log n) typically | Space: O(log n)
+    └─ 🎯 Use: Merge sort, quick sort, binary search
+```
+
+---
+
 ## 🔷 Part 1: Recursion Fundamentals
 
 ### Concepts to Master:
