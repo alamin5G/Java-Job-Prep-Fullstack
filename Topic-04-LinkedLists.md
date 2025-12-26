@@ -5,6 +5,108 @@ Linked Lists হলো dynamic data structure যা interview তে frequently
 
 ---
 
+## 🎯 3 Linked List Patterns - Quick Reference
+
+> **Master these 3 patterns → Solve 100+ linked list problems!**
+
+### Pattern Recognition Checklist
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  PROBLEM KEYWORDS → PATTERN                                  │
+├─────────────────────────────────────────────────────────────┤
+│  ✅ "cycle detection" + "middle element" → FAST & SLOW      │
+│  ✅ "reverse list" + "in-place" → IN-PLACE REVERSAL         │
+│  ✅ "merge sorted lists" → MERGE LISTS                       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Visual Pattern Map
+
+```
+LINKED LIST PATTERNS (3)
+│
+├─ 🟡 PATTERN 3: Fast & Slow Pointers (Tortoise & Hare)
+│   └─ 🧠 Memory Trick: "Tortoise and Hare race - they meet if there's a loop"
+│   └─ ⏰ Time: O(n) | Space: O(1)
+│   └─ 🎯 Use: Cycle detection, middle element, palindrome check
+│   └─ 📝 Template:
+│       slow = head
+│       fast = head
+│       while fast and fast.next:
+│           slow = slow.next
+│           fast = fast.next.next
+│           if slow == fast: cycle found!
+│
+├─ 🔴 PATTERN 9: In-place Reversal
+│   └─ 🧠 Memory Trick: "Three pointers dance - prev, current, next"
+│   └─ ⏰ Time: O(n) | Space: O(1)
+│   └─ 🎯 Use: Reverse list, reverse in groups, palindrome
+│   └─ 📝 Template:
+│       prev = null
+│       current = head
+│       while current:
+│           next = current.next
+│           current.next = prev
+│           prev = current
+│           current = next
+│
+└─ 🟢 PATTERN 10: Merge Lists
+    └─ 🧠 Memory Trick: "Two sorted queues merging into one"
+    └─ ⏰ Time: O(n + m) | Space: O(1)
+    └─ 🎯 Use: Merge sorted lists, merge K lists, sort list
+    └─ 📝 Template:
+        dummy = Node(0)
+        current = dummy
+        while l1 and l2:
+            if l1.val < l2.val:
+                current.next = l1
+                l1 = l1.next
+            else:
+                current.next = l2
+                l2 = l2.next
+            current = current.next
+```
+
+### Quick Decision Tree
+
+```
+START: Linked List Problem
+    │
+    ├─ Need to find MIDDLE or detect CYCLE?
+    │   └─ YES → ✅ FAST & SLOW POINTERS
+    │
+    ├─ Need to REVERSE list (whole or parts)?
+    │   └─ YES → ✅ IN-PLACE REVERSAL
+    │
+    └─ Need to MERGE sorted lists?
+        └─ YES → ✅ MERGE LISTS
+```
+
+### Memorization Mnemonics
+
+**Remember: "FSM" (Fast-Slow, Reversal, Merge)**
+
+```
+F - Fast & Slow    → "Fable of tortoise & hare"
+R - Reversal       → "Reverse the arrow direction"
+M - Merge          → "Merge two sorted queues"
+```
+
+### Common Problem Patterns
+
+| Problem Type | Pattern | Example |
+|-------------|---------|---------|
+| Find middle | Fast & Slow | Median in stream |
+| Detect cycle | Fast & Slow | Loop detection |
+| Reverse entire list | In-place Reversal | Undo stack |
+| Reverse in groups | In-place Reversal | Batch processing |
+| Palindrome check | Fast & Slow + Reversal | Symmetric validation |
+| Merge 2 sorted | Merge Lists | Combine logs |
+| Merge K sorted | Merge Lists + Heap | Multi-source merge |
+
+---
+
 ## 🔷 Part 1: Linked List Fundamentals
 
 ### Concepts to Master:
