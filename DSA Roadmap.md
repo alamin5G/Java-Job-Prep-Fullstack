@@ -4,6 +4,39 @@
 
 ---
 
+## 🎯 NEW: Pattern-Based Learning Approach
+
+> **Master 28 Patterns → Solve 1000+ Problems!**
+
+Instead of memorizing solutions for each data structure, learn **28 universal patterns** that can be applied to solve hundreds of problems!
+
+### 📖 Complete Pattern Guide
+**[28 DSA Patterns - Complete Guide →](28-DSA-PATTERNS.md)**
+
+**YouTube Playlist:** [DSA Patterns](https://www.youtube.com/watch?v=qH2VQY48mg4&list=PLbJhGqY-mq47k_WLUtzVjmarUm1EuXPj2)
+
+### Quick Pattern Overview:
+
+| Category | Patterns | Coverage |
+|----------|----------|----------|
+| **Array & String** | Two Pointers, Sliding Window, Fast & Slow Pointers, Merge Intervals, Cyclic Sort, Prefix Sum, Frequency Counter, Monotonic Stack | ✅ 8/8 |
+| **Linked List** | In-place Reversal, Merge Lists | ✅ 2/2 |
+| **Tree** | Tree DFS, Tree BFS, BST, Trie, Heap | ✅ 5/5 |
+| **Graph** | Graph DFS, Graph BFS, Union Find, Topological Sort | ✅ 4/4 |
+| **Dynamic Programming** | 0/1 Knapsack, Unbounded Knapsack, LCS, LIS | ✅ 4/4 |
+| **Backtracking** | Backtracking, Divide & Conquer | ✅ 2/2 |
+| **Advanced** | Binary Search, Bitwise XOR, Two Heaps | ✅ 3/3 |
+
+**Total: 28/28 Patterns ✅ (100% Coverage)**
+
+**Why Pattern-Based Learning?**
+- ✅ Learn once, apply everywhere
+- ✅ Solve 1000+ problems with 28 templates
+- ✅ Faster problem-solving
+- ✅ Better interview performance
+
+---
+
 ## 📚 Table of Contents
 
 ### Core Topics (Click to Navigate)

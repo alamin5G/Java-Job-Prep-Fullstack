@@ -5,6 +5,124 @@ Arrays হলো DSA এর সবচেয়ে গুরুত্বপূর
 
 ---
 
+## 🎯 8 Array Patterns - Quick Reference
+
+> **Master these 8 patterns → Solve 200+ array problems!**
+
+### Pattern Recognition Checklist
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  PROBLEM KEYWORDS → PATTERN                                  │
+├─────────────────────────────────────────────────────────────┤
+│  ✅ "sorted array" + "pair/triplet" → TWO POINTERS          │
+│  ✅ "subarray" + "consecutive" → SLIDING WINDOW              │
+│  ✅ "cycle detection" + "linked list" → FAST & SLOW          │
+│  ✅ "overlapping intervals" → MERGE INTERVALS                │
+│  ✅ "array 1 to n" + "missing" → CYCLIC SORT                 │
+│  ✅ "range sum" + "multiple queries" → PREFIX SUM            │
+│  ✅ "count frequency" + "anagram" → FREQUENCY COUNTER        │
+│  ✅ "next greater/smaller" → MONOTONIC STACK                 │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Visual Pattern Map
+
+```
+ARRAY PATTERNS (8)
+│
+├─ 🔵 PATTERN 1: Two Pointers
+│   └─ 🧠 Memory Trick: "Two friends walking towards each other"
+│   └─ ⏰ Time: O(n) | Space: O(1)
+│   └─ 🎯 Use: Sorted arrays, pairs, palindromes
+│
+├─ 🟢 PATTERN 2: Sliding Window
+│   └─ 🧠 Memory Trick: "Train window - add new, remove old"
+│   └─ ⏰ Time: O(n) | Space: O(1) or O(k)
+│   └─ 🎯 Use: Subarrays, consecutive elements, max/min
+│
+├─ 🟡 PATTERN 3: Fast & Slow Pointers
+│   └─ 🧠 Memory Trick: "Tortoise and Hare race"
+│   └─ ⏰ Time: O(n) | Space: O(1)
+│   └─ 🎯 Use: Cycle detection, middle element
+│
+├─ 🟣 PATTERN 4: Merge Intervals
+│   └─ 🧠 Memory Trick: "Overlapping meetings - combine them"
+│   └─ ⏰ Time: O(n log n) | Space: O(n)
+│   └─ 🎯 Use: Intervals, scheduling, time ranges
+│
+├─ 🔴 PATTERN 5: Cyclic Sort
+│   └─ 🧠 Memory Trick: "Put each number in its home (index)"
+│   └─ ⏰ Time: O(n) | Space: O(1)
+│   └─ 🎯 Use: Arrays with 1 to n, missing numbers
+│
+├─ 🟠 PATTERN 6: Prefix Sum
+│   └─ 🧠 Memory Trick: "Running total - like bank balance"
+│   └─ ⏰ Time: O(1) query | Space: O(n)
+│   └─ 🎯 Use: Range queries, subarray sums
+│
+├─ ⚫ PATTERN 7: Frequency Counter
+│   └─ 🧠 Memory Trick: "HashMap = Attendance register"
+│   └─ ⏰ Time: O(n) | Space: O(n)
+│   └─ 🎯 Use: Counting, anagrams, duplicates
+│
+└─ ⚪ PATTERN 8: Monotonic Stack
+    └─ 🧠 Memory Trick: "Stack of plates - always increasing/decreasing"
+    └─ ⏰ Time: O(n) | Space: O(n)
+    └─ 🎯 Use: Next greater/smaller, histogram
+```
+
+### Quick Decision Tree
+
+```
+START: Array Problem
+    │
+    ├─ Is array SORTED?
+    │   ├─ YES → Finding pairs/triplets?
+    │   │   └─ YES → ✅ TWO POINTERS
+    │   └─ NO → Continue...
+    │
+    ├─ Need CONSECUTIVE elements?
+    │   ├─ YES → Max/min in window?
+    │   │   └─ YES → ✅ SLIDING WINDOW
+    │   └─ NO → Continue...
+    │
+    ├─ Multiple RANGE SUM queries?
+    │   └─ YES → ✅ PREFIX SUM
+    │
+    ├─ Need to COUNT occurrences?
+    │   └─ YES → ✅ FREQUENCY COUNTER
+    │
+    ├─ Array contains 1 to n?
+    │   └─ YES → ✅ CYCLIC SORT
+    │
+    ├─ Find NEXT greater/smaller?
+    │   └─ YES → ✅ MONOTONIC STACK
+    │
+    ├─ OVERLAPPING intervals?
+    │   └─ YES → ✅ MERGE INTERVALS
+    │
+    └─ CYCLE detection?
+        └─ YES → ✅ FAST & SLOW POINTERS
+```
+
+### Memorization Mnemonics
+
+**Remember: "TSFMCPFM" (Two Sliding Fast Merge Cyclic Prefix Frequency Monotonic)**
+
+```
+T - Two Pointers        → "Two friends meet"
+S - Sliding Window      → "Sliding train window"
+F - Fast & Slow         → "Fable of tortoise & hare"
+M - Merge Intervals     → "Merge overlapping meetings"
+C - Cyclic Sort         → "Circle back to home"
+P - Prefix Sum          → "Prefix = Previous + current"
+F - Frequency Counter   → "Frequency = How many times?"
+M - Monotonic Stack     → "Monotonic = Always increasing/decreasing"
+```
+
+---
+
 ## 🔷 Part 1: Array Fundamentals
 
 ### Concepts to Master:
@@ -118,10 +236,44 @@ Arrays হলো DSA এর সবচেয়ে গুরুত্বপূর
 
 ---
 
-## 🔷 Part 2: Two Pointers Technique
+## 🔷 Part 2: 🔵 PATTERN 1 - Two Pointers Technique
+
+> **🧠 Memory Trick:** "Two friends walking towards each other from opposite ends"
+> 
+> **⏰ Complexity:** Time O(n) | Space O(1)
+> 
+> **🎯 When to Use:** Sorted arrays, finding pairs, palindromes, partitioning
 
 ### Core Philosophy:
 দুইটা pointer use করে array traverse করা - usually opposite ends থেকে বা same direction এ।
+
+### Pattern Template:
+```java
+// Template 1: Opposite Direction (Most Common)
+int left = 0;
+int right = arr.length - 1;
+
+while (left < right) {
+    if (condition_met) {
+        // Process and move both
+        left++;
+        right--;
+    } else if (need_larger_value) {
+        left++;  // Move left pointer right
+    } else {
+        right--; // Move right pointer left
+    }
+}
+
+// Template 2: Same Direction
+int slow = 0;
+for (int fast = 0; fast < arr.length; fast++) {
+    if (condition) {
+        arr[slow] = arr[fast];
+        slow++;
+    }
+}
+```
 
 ### Concepts to Master:
 
