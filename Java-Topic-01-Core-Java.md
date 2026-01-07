@@ -531,7 +531,7 @@ Master Core Java concepts that form the foundation of every Java application and
   - Collections: ArrayList for books, HashMap for members
   - Exception handling for invalid operations
   - **Skills:** OOP, Collections, File I/O
-- [ ] **Project 2: Student Grade Calculator**
+- [X] **Project 2: Student Grade Calculator**
 
   - Inheritance: Person → Student
   - Collections: TreeMap for sorted grades
