@@ -5,13 +5,15 @@ public class PrimeNumberPrac {
         int range = 300;
 
 
-        System.out.print("Prime Numbers are: ");
 
         int r = estimateSize(range);
-        System.out.print("estimateSize : " + r);
+        System.out.println("estimateSize : " + r);
+
+
 
 
         int[] primes = primeNumbers(range);
+        System.out.println("Prime Numbers are: " + primes.length);
         for (int i : primes){
             System.out.print(i + " ");
         }
@@ -39,7 +41,7 @@ public class PrimeNumberPrac {
         if(range >= 2){
 
             Double n = range / Math.log(range);
-            n =  Math.ceil(n * 1.25);
+            n =  Math.ceil(n * 1.2); //add the safe size
             int i = n.intValue();
             return i;
         }
